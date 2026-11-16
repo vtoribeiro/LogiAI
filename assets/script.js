@@ -152,8 +152,8 @@ try {
   config = await request('/api/config'); renderContract(config); render();
   $('contract-button').disabled = false;
   if (config.ai.available) {
-    document.querySelector('.ai-badge').textContent = 'IA · Disponível';
-    $('ai-description').textContent = 'Gere hipóteses e alternativas com base nos indicadores. Somente agregados são enviados ao provedor de IA.';
+    document.querySelector('.ai-badge').textContent = 'IA · Groq configurada';
+    $('ai-description').textContent = 'Gere hipóteses e alternativas com openai/gpt-oss-20b na Groq. Ao solicitar o diagnóstico, somente indicadores agregados e limitações serão enviados.';
   }
   status('Tudo pronto. Importe seus CSVs ou explore a demonstração com dados fictícios.');
 } catch {

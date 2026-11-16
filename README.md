@@ -3,17 +3,17 @@
 Aplicação web de análise logística que consolida arquivos CSV de pedidos, entregas e ocorrências
 para transformar dados operacionais em indicadores verificáveis e apoiar decisões gerenciais.
 
-O projeto evolui de forma incremental para incorporar diagnósticos e recomendações de IA generativa,
+O projeto integra a Groq com o modelo `openai/gpt-oss-20b` para diagnósticos e recomendações de IA generativa,
 fundamentados nos dados validados, com uma arquitetura simples, modular e extensível.
 
-**Estado atual:** primeira versão funcional para uso local. Importação, validação, indicadores e dashboard
-estão implementados. A integração de IA está preparada, mas ainda não possui provedor ou modelo configurado.
+**Estado atual:** versão 2 para uso local, com importação, validação, indicadores, dashboard e integração Groq.
+O diagnóstico é habilitado ao configurar `GROQ_API_KEY` no servidor; sem chave, a análise logística continua funcionando.
 
 ## Objetivo
 
 Oferecer uma visão consolidada da operação, facilitar a identificação de problemas de desempenho
 e apoiar a avaliação de alternativas de melhoria logística. Os cálculos oficiais são determinísticos;
-a futura IA terá função consultiva, sem alterar dados ou executar decisões operacionais automaticamente.
+a IA tem função consultiva, sem alterar dados ou executar decisões operacionais automaticamente.
 
 ## Características principais
 
@@ -26,7 +26,7 @@ a futura IA terá função consultiva, sem alterar dados ou executar decisões o
 - Modelos de CSV para download e demonstração com dados fictícios.
 - Rastreabilidade por arquivos de origem, versão do contrato e resumo SHA-256 da base.
 - Análises temporárias em memória, com expiração e opção de limpeza.
-- Camada de IA separada dos cálculos, com validação de respostas e tratamento de falhas preparado.
+- Diagnósticos via Groq, com fatos verificados, hipóteses, alternativas de ação e limitações em JSON estruturado.
 
 ## Tecnologias utilizadas
 
@@ -37,6 +37,7 @@ a futura IA terá função consultiva, sem alterar dados ou executar decisões o
 | JavaScript com módulos ES | Interações, comunicação com a API e renderização segura |
 | Node.js 22 ou superior | Execução do backend e dos testes |
 | Express 5 | API HTTP, arquivos públicos e tratamento de erros |
+| Groq + `openai/gpt-oss-20b` | Diagnósticos por `fetch` nativo, sem SDK adicional |
 | csv-parse 7 | Leitura e interpretação dos arquivos CSV |
 | `node:test` e `node:assert` | Testes automatizados e verificações de resultados |
 | npm e `package-lock.json` | Gerenciamento e reprodução das dependências |
@@ -50,7 +51,7 @@ Esta versão não utiliza banco de dados, autenticação ou framework de fronten
 - **Desenvolvimento web:** interface responsiva, API REST e separação de responsabilidades.
 - **Qualidade de software:** especificações de comportamento, testes e resultados de referência independentes.
 - **Segurança e privacidade:** validação de entradas, limites de recursos e minimização de dados.
-- **Preparação para IA generativa:** contexto agregado, fatos verificáveis e distinção entre hipóteses e recomendações.
+- **Integração de IA generativa:** contexto agregado, fatos verificáveis e distinção entre hipóteses e recomendações.
 
 Procedimentos reutilizáveis do agente serão documentados progressivamente em `skills.md`, quando criado.
 
@@ -73,6 +74,21 @@ Acesse [LogiAI local](http://127.0.0.1:3000). Não é necessária uma chave de I
 | `npm test` | Executar os testes automatizados |
 
 A variável de ambiente `PORT` permite trocar a porta; o endereço continua restrito a `127.0.0.1`.
+
+## Configurar a IA
+
+1. Mantenha sua conta Groq no plano **Free** e crie uma chave no [console da Groq](https://console.groq.com/keys).
+2. Se `.env` ainda não existir, copie `.env.example` para `.env` na raiz do projeto.
+3. Preencha `GROQ_API_KEY=` somente no `.env` local, sem compartilhar a chave em chats ou commits.
+4. Reinicie com `npm start`, importe uma base válida e clique em **Gerar diagnóstico**.
+
+O servidor carrega `.env` automaticamente; variáveis já definidas no ambiente têm precedência.
+`.env` e suas variantes são ignorados pelo Git; somente `.env.example`, sem credenciais, é versionado.
+O plano gratuito é definido na conta Groq, não por uma opção do código; cotas e disponibilidade podem mudar.
+Limite de uso (`429`), chave recusada e falhas do provedor geram mensagens controladas, sem apagar indicadores.
+Há uma chamada por vez, tempo limite de 20 segundos e até 4.096 tokens de conclusão, sem repetição automática.
+Somente agregados e limitações são enviados; CSVs completos, nomes e IDs ficam fora do contexto externo.
+Referências: [JSON Schema](https://console.groq.com/docs/structured-outputs) e [planos da Groq](https://console.groq.com/docs/billing-faqs).
 
 ## Primeiro uso
 
@@ -125,7 +141,7 @@ A análise considera apenas os arquivos enviados e não comprova a completude do
 ## Arquitetura e organização
 
 Fluxo principal: **CSVs → leitura → validação e relacionamento → indicadores → dashboard**.
-A futura geração de diagnósticos consome agregados validados, sem interferir nesse fluxo.
+A geração de diagnósticos consome agregados validados, sem interferir nesse fluxo.
 
 ```text
 index.html            Interface principal
@@ -143,6 +159,8 @@ src/
   analysis.js         Cálculo determinístico e agregações
   store.js            Armazenamento temporário em memória
   ai.js               Contrato do adaptador e validação de respostas de IA
+  providers/groq.js   Chamada à Groq, instruções e JSON Schema
+  config.js           Carregamento local do .env
   errors.js           Erros controlados da aplicação
 tests/                Testes de análise, API, armazenamento e IA simulada
 ```
@@ -168,9 +186,9 @@ Os testes cobrem indicadores com valores conhecidos, CSVs inválidos, duplicidad
 limites, isolamento, expiração e proteção das rotas. A camada de IA é testada com respostas simuladas,
 incluindo indisponibilidade, tempo limite e fatos numéricos incompatíveis com a base.
 
-A integração real de IA permanece pendente: será necessário escolher provedor e modelo, definir orçamento
-e avaliar a fundamentação das recomendações. Até lá, o botão de diagnóstico permanece desabilitado
-e nenhuma análise é enviada a um provedor externo.
+A integração utiliza o modelo escolhido na Groq; os testes usam respostas simuladas, sem consumir a API real.
+Fatos numéricos são conferidos contra os indicadores; hipóteses e recomendações exigem revisão gerencial.
+A qualidade semântica e o acesso real dependem de validação com a chave local e a conta do usuário.
 
 Publicação e configuração de deployment serão tratadas em uma etapa posterior.
-O MVP completo depende dessas definições de integração e da validação das recomendações reais.
+A validação de recomendações reais permanece necessária antes de considerar o MVP integralmente validado.

@@ -1,7 +1,7 @@
 import { AppError } from './errors.js';
 import { LIMITS } from './contract.js';
 
-// O futuro adaptador recebe somente agregados; nenhum texto, ID ou nome dos CSVs é enviado.
+// O adaptador recebe somente agregados; nenhum texto, ID ou nome dos CSVs é enviado.
 export function buildAiContext(analysis) {
   return {
     contractVersion: analysis.contractVersion,
@@ -46,7 +46,7 @@ export function createAiService({ provider = null, timeoutMs = LIMITS.aiTimeoutM
   return {
     available: Boolean(provider),
     async diagnose(analysis) {
-      if (!provider) throw new AppError(503, 'AI_NOT_CONFIGURED', 'Integração preparada. Nenhum provedor de IA foi configurado; os indicadores continuam disponíveis.');
+      if (!provider) throw new AppError(503, 'AI_NOT_CONFIGURED', 'Configure GROQ_API_KEY no .env do servidor e reinicie o aplicativo. Os indicadores continuam disponíveis.');
       if (busy) throw new AppError(429, 'AI_BUSY', 'Uma análise de IA já está em andamento. Aguarde antes de tentar novamente.');
       busy = true;
       const controller = new AbortController();
