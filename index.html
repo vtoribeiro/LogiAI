@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Consolide dados de pedidos, entregas e ocorrências para entender sua operação logística.">
+  <meta name="theme-color" content="#112d2a">
+  <title>LogiAI · Visão da operação</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23112d2a'/%3E%3Cpath d='M12 10v20h17v-5H17V10' fill='%236ae0b3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="module" src="/assets/script.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Ir para o conteúdo</a>
+  <aside class="sidebar" aria-label="Navegação principal">
+    <a class="brand" href="#overview" aria-label="LogiAI, início"><span class="brand-symbol" aria-hidden="true">L<span></span></span><span>Logi<span class="brand-ai">AI</span></span></a>
+    <p class="sidebar-label">SEU CENTRO DE ANÁLISE</p>
+    <nav>
+      <a class="nav-item active" href="#overview" aria-current="page"><span aria-hidden="true">▦</span> Visão geral</a>
+      <a class="nav-item" href="#import"><span aria-hidden="true">↥</span> Importar dados</a>
+      <a class="nav-item" href="#intelligence"><span aria-hidden="true">✧</span> Diagnóstico de IA</a>
+    </nav>
+    <div class="sidebar-note"><span class="note-icon" aria-hidden="true">↗</span><strong>Dados conectados.<br>Decisões mais claras.</strong><p>Uma visão da operação, do pedido à entrega.</p></div>
+    <div class="sidebar-footer"><span class="status-dot"></span><div>Ambiente local<small>MVP · Dados transitórios</small></div><span class="version">v0.1</span></div>
+  </aside>
+
+  <div class="workspace">
+    <header class="topbar"><p>Operação <span aria-hidden="true">/</span> <strong>Visão geral</strong></p><span class="privacy-label"><span aria-hidden="true">◉</span> Seus arquivos ficam nesta sessão</span></header>
+    <main id="main">
+      <section id="overview" class="page-heading" aria-labelledby="page-title">
+        <div><p class="eyebrow">INTELIGÊNCIA LOGÍSTICA</p><h1 id="page-title">Sua operação, em perspectiva.</h1><p>Conecte seus dados. Entenda o desempenho. Encontre o próximo passo.</p></div>
+        <button id="demo-button" class="button secondary" disabled><span aria-hidden="true">▷</span> Explorar demonstração</button>
+      </section>
+
+      <section id="import" class="import-panel" aria-labelledby="import-title">
+        <div class="import-copy"><span class="step-label">01 / CONECTAR</span><h2 id="import-title">Comece pelos seus dados</h2><p>Reúna pedidos, entregas e ocorrências em uma única análise.</p><button id="contract-button" class="text-button" disabled>Ver formatos e regras <span aria-hidden="true">↗</span></button></div>
+        <form id="import-form" class="upload-form">
+          <label id="drop-zone" class="drop-zone" for="csv-files"><span class="upload-icon" aria-hidden="true">↥</span><span><strong>Selecione ou arraste seus arquivos CSV</strong><small>Os 3 tipos de dados · até 9 arquivos · 1 MiB por arquivo</small></span><input id="csv-files" type="file" accept=".csv,text/csv" multiple disabled aria-describedby="file-help"></label>
+          <p id="file-help" class="file-help">Até 5 MiB no total. Consulte os modelos antes de importar.</p>
+          <ul id="file-list" class="file-list" aria-label="Arquivos selecionados"></ul>
+          <div class="upload-actions"><span id="selection-count">Nenhum arquivo selecionado</span><button id="analyze-button" class="button primary" type="submit" disabled>Analisar arquivos <span aria-hidden="true">→</span></button></div>
+        </form>
+      </section>
+
+      <p id="status-message" class="status-message" role="status" aria-live="polite">Conectando ao servidor local…</p>
+      <section id="error-panel" class="error-panel" role="alert" hidden><h2>Não foi possível concluir</h2><p id="error-message"></p><ul id="error-details"></ul></section>
+
+      <section class="results-section" aria-labelledby="results-title">
+        <div class="section-heading"><div><p class="eyebrow">02 / ENTENDER</p><h2 id="results-title">Visão da operação</h2><p id="period-label">Importe seus arquivos para revelar os indicadores.</p></div><div class="analysis-actions"><span id="data-badge" class="badge">Sem dados</span><button id="clear-button" class="text-button muted" disabled>Limpar análise</button></div></div>
+        <div id="metrics" class="metrics-grid" aria-label="Indicadores da operação"></div>
+
+        <div class="chart-grid">
+          <section class="panel delivery-panel" aria-labelledby="delivery-title"><div class="panel-heading"><h3 id="delivery-title">Panorama das entregas</h3><span class="panel-kicker">BASE IMPORTADA</span></div><div id="delivery-chart" class="delivery-chart"><div class="empty-state"><span aria-hidden="true">◌</span><p>Cada entrega conta uma parte da história.</p><small>A distribuição aparecerá após a importação.</small></div></div></section>
+          <section class="panel" aria-labelledby="occurrence-title"><div class="panel-heading"><h3 id="occurrence-title">Ocorrências por tipo</h3><span id="occurrence-total" class="count-badge">—</span></div><div id="occurrence-chart" class="occurrence-chart"></div><div id="occurrence-pagination" class="pagination"></div></section>
+        </div>
+
+        <section class="panel carrier-panel" aria-labelledby="carrier-title"><div class="panel-heading"><div><h3 id="carrier-title">Desempenho por transportadora</h3><p>Compare volumes e pontualidade dentro da base importada.</p></div><span id="carrier-count" class="panel-kicker">SEM DADOS</span></div><div class="table-scroll" tabindex="0" role="region" aria-label="Tabela de transportadoras, com rolagem horizontal"><table><caption class="sr-only">Indicadores por transportadora, sem metas de desempenho.</caption><thead><tr><th scope="col">Transportadora</th><th scope="col">Pedidos</th><th scope="col">Concluídas</th><th scope="col">Sem entrega</th><th scope="col">Pontualidade</th></tr></thead><tbody id="carrier-rows"><tr><td colspan="5" class="table-empty">As transportadoras dos seus arquivos aparecerão aqui.</td></tr></tbody></table></div><p class="table-hint">Deslize a tabela ou use as setas do teclado para ver todos os indicadores.</p><div id="carrier-pagination" class="pagination"></div></section>
+      </section>
+
+      <section id="intelligence" class="intelligence-panel" aria-labelledby="ai-title"><div class="ai-heading"><span class="ai-icon" aria-hidden="true">✧</span><div><p class="eyebrow">03 / DECIDIR</p><h2 id="ai-title">Dos indicadores ao próximo passo</h2></div><span class="badge ai-badge">IA · Integração preparada</span></div><p id="ai-description">O diagnóstico conectará os resultados a hipóteses e alternativas de ação. Nenhum provedor foi configurado nesta versão.</p><div id="ai-result" aria-live="polite"></div><div class="ai-footer"><p id="ai-status">Os indicadores funcionam independentemente da IA.</p><button id="ai-button" class="button primary" disabled>Gerar diagnóstico <span aria-hidden="true">✧</span></button></div></section>
+
+      <details id="trace-panel" class="trace-panel" hidden><summary>Qualidade, origem dos dados e critérios da análise</summary><div id="trace-content"></div></details>
+      <footer class="page-footer"><span><strong>LogiAI</strong> · Clareza para mover melhor.</span><span>Análise local · Sem persistência de arquivos</span></footer>
+    </main>
+  </div>
+
+  <dialog id="contract-dialog" aria-labelledby="contract-title"><div class="dialog-heading"><div><p class="eyebrow">CONTRATO INICIAL · MVP-1</p><h2 id="contract-title">Prepare seus arquivos</h2></div><button id="close-dialog" class="icon-button" aria-label="Fechar formatos e regras">×</button></div><p>Os modelos contêm os cabeçalhos. Preencha com os dados da sua operação e envie os três tipos juntos.</p><div id="schemas" class="schemas"></div><h3>Regras da importação</h3><ul id="contract-rules"></ul><h3>Como os indicadores são calculados</h3><dl id="metric-definitions"></dl><p class="dialog-footnote">Datas são dias de calendário, sem conversão de fuso. O período usa as datas dos pedidos; não há filtro aplicado.</p></dialog>
+</body>
+</html>

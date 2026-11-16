@@ -1,0 +1,19 @@
+{
+  "name": "logiai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Análise logística local a partir de arquivos CSV.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "csv-parse": "^7.0.3",
+    "express": "^5.1.0"
+  }
+}

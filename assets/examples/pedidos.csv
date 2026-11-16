@@ -1,0 +1,7 @@
+pedido_id;data_pedido;data_prevista;transportadora;destino
+P001;2026-10-01;2026-10-03;Rota Sul;Curitiba
+P002;2026-10-02;2026-10-05;Rota Sul;Florianópolis
+P003;2026-10-03;2026-10-07;Via Norte;São Paulo
+P004;2026-10-04;2026-10-08;Via Norte;Campinas
+P005;2026-10-05;2026-10-10;Expresso Centro;Goiânia
+P006;2026-10-06;2026-10-12;Expresso Centro;Brasília

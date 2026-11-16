@@ -1,0 +1,4 @@
+ocorrencia_id;pedido_id;data_ocorrencia;tipo
+O001;P002;2026-10-05;Atraso informado
+O002;P004;2026-10-08;Atraso informado
+O003;P004;2026-10-09;Avaria
