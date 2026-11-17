@@ -78,12 +78,12 @@ A variável de ambiente `PORT` permite trocar a porta; o endereço continua rest
 ## Configurar a IA
 
 1. Mantenha sua conta Groq no plano **Free** e crie uma chave no [console da Groq](https://console.groq.com/keys).
-2. Se `.env` ainda não existir, copie `.env.example` para `.env` na raiz do projeto.
-3. Preencha `GROQ_API_KEY=` somente no `.env` local, sem compartilhar a chave em chats ou commits.
+2. Se `.env` ainda não existir, crie esse arquivo na raiz do projeto.
+3. Adicione `GROQ_API_KEY=<sua-chave>` ao `.env` local, substituindo `<sua-chave>` pela chave da Groq.
 4. Reinicie com `npm start`, importe uma base válida e clique em **Gerar diagnóstico**.
 
 O servidor carrega `.env` automaticamente; variáveis já definidas no ambiente têm precedência.
-`.env` e suas variantes são ignorados pelo Git; somente `.env.example`, sem credenciais, é versionado.
+O Git ignora `.env` e todas as variantes `.env.*`.
 O plano gratuito é definido na conta Groq, não por uma opção do código; cotas e disponibilidade podem mudar.
 Limite de uso (`429`), chave recusada e falhas do provedor geram mensagens controladas, sem apagar indicadores.
 Há uma chamada por vez, tempo limite de 20 segundos e até 4.096 tokens de conclusão, sem repetição automática.

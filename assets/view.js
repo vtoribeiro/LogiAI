@@ -16,6 +16,7 @@ function empty(container, message) {
 export function renderMetrics(definitions, analysis) {
   $('metrics').replaceChildren(...definitions.map(definition => {
     const card = el('article', undefined, `metric${definition.id === 'onTimeRate' ? ' featured' : ''}`);
+    if (analysis) card.classList.add('metric-loaded');
     const value = analysis?.metrics[definition.id];
     const displayed = format(value) + (value !== null && value !== undefined && definition.unit === '%' ? '%' : '');
     card.title = definition.formula;

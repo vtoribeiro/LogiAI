@@ -12,8 +12,6 @@ report.*.json
 # Configurações locais e credenciais
 .env
 .env.*
-# Única exceção: modelo sem credenciais na raiz do projeto
-!/.env.example
 .npmrc
 .netrc
 .aws/
